@@ -84,19 +84,19 @@
 		try{
 			// decode the returned value in case it was encoded by the index page
 			const decoded = decodeURIComponent(raw);
-			const resolved = new URL(decoded, location.href);
+			const resolved = new URL(decoded);
 			// only allow same-origin http(s) links
-			console.log('resolved', resolved);
+			//console.log('resolved', resolved);
 			if ((resolved.protocol === 'http:' || resolved.protocol === 'https:')){
 				// Use only the path+query+hash portion to avoid leaking origin
 				const safePath = resolved.origin + resolved.pathname;
 				const btn = document.getElementById('backBtn');
-				console.log('in if with btn', btn, safePath);
+				//console.log('in if with btn', btn, safePath);
 				if (btn) btn.setAttribute('href', safePath);
 			}
 		}catch(e){
 			// ignore invalid values and keep default
-			console.log('invalid param');
+			//console.log('invalid param');
 		}
 	})();
 
