@@ -18,6 +18,8 @@
 		input[type="text"],input[type="date"]{padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px}
 		button#exportBtn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:6px;font-weight:600;cursor:pointer}
 		button#exportBtn:disabled{opacity:0.6;cursor:default}
+		button#downloadCsvBtn{background:#fff;color:var(--accent);border:1px solid #d1e7e2;padding:10px 14px;border-radius:6px;font-weight:600;cursor:pointer}
+		button#downloadCsvBtn:disabled{opacity:0.6;cursor:default}
 		.note{font-size:13px;color:var(--muted);margin-top:8px}
 		table{width:100%;border-collapse:collapse;margin-top:18px}
 		th,td{padding:12px 10px;text-align:left;border-bottom:1px solid #eef3f4}
@@ -47,7 +49,10 @@
 				<input id="end" name="end" type="date" />
 			</div>
 			<div class="field" style="align-self:end">
-				<button id="exportBtn" type="submit">Export</button>
+				<div style="display:flex;gap:8px">
+					<button id="exportBtn" type="submit">Export</button>
+					<button id="downloadCsvBtn" type="button">Download as CSV</button>
+				</div>
 			</div>
 		</form>
 
@@ -69,6 +74,7 @@
 		const startInput = document.getElementById('start');
 		const endInput = document.getElementById('end');
 		const exportBtn = document.getElementById('exportBtn');
+		const downloadCsvBtn = document.getElementById('downloadCsvBtn');
 		const status = document.getElementById('status');
 		const tbody = document.querySelector('#eventsTable tbody');
 
@@ -149,6 +155,23 @@
 			} finally {
 				exportBtn.disabled = false;
 			}
+		});
+
+		// CSV download: build same URL but request CSV format and open it to trigger download
+		downloadCsvBtn.addEventListener('click', (ev) => {
+			status.textContent = '';
+			const umbrella = encodeURIComponent((umbrellaInput.value || 'balfolk-nl').trim());
+			const start = startInput.value;
+			const end = endInput.value;
+			if (!start || !end){
+				status.textContent = 'Please choose both start and end dates.';
+				return;
+			}
+
+			const url = `https://plugeventsexport.azurewebsites.net/api/UmbrellaEvents?Umbrella=${umbrella}&StartDate=${encodeURIComponent(start)}&EndDate=${encodeURIComponent(end)}&Top=999&format=CSV`;
+			status.textContent = 'Starting CSV download...';
+			// Open in new tab/window — server should return a CSV attachment
+			window.open(url, '_blank');
 		});
 	</script>
 </body>
