@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Calendar Export</title>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+	<style>
+		:root{--accent:#0b6b5f;--muted:#6b6b6b;--bg:#ffffff}
+		html,body{height:100%;margin:0;font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:#f5f7f8;color:#1b1b1b}
+		.wrap{max-width:980px;margin:36px auto;padding:28px;background:var(--bg);box-shadow:0 6px 18px rgba(16,24,40,0.06);border-radius:8px}
+		.header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+		.backBtn{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:#fff;color:var(--accent);border:1px solid #d1e7e2;text-decoration:none;font-weight:600}
+		h1{margin:0 0 12px;font-size:20px}
+		p.lead{margin:0 0 18px;color:var(--muted)}
+		form.controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+		.field{display:flex;flex-direction:column;min-width:160px}
+		label{font-size:13px;color:var(--muted);margin-bottom:6px}
+		input[type="text"],input[type="date"]{padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px}
+		button#exportBtn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:6px;font-weight:600;cursor:pointer}
+		button#exportBtn:disabled{opacity:0.6;cursor:default}
+		button#downloadCsvBtn{background:#fff;color:var(--accent);border:1px solid #d1e7e2;padding:10px 14px;border-radius:6px;font-weight:600;cursor:pointer}
+		button#downloadCsvBtn:disabled{opacity:0.6;cursor:default}
+		.note{font-size:13px;color:var(--muted);margin-top:8px}
+		table{width:100%;border-collapse:collapse;margin-top:18px}
+		th,td{padding:12px 10px;text-align:left;border-bottom:1px solid #eef3f4}
+		th{font-size:13px;color:var(--muted);font-weight:600}
+		td a{color:var(--accent);text-decoration:none}
+		td a:hover{text-decoration:underline}
+		.empty{padding:18px;text-align:center;color:var(--muted)}
+		@media (max-width:640px){.field{min-width:140px;width:100%}.controls{flex-direction:column}}
+	</style>
+</head>
+
+<body>
+	<div class="wrap">
+		<div style="text-align:left;margin-bottom:12px">
+			<a class="backBtn" id="backBtn" href="../index.html">← Menu</a>
+		</div>
+		<h1>Export Umbrella Events</h1>
+		<p class="lead">Enter an umbrella name and date range to export events from Plug.Events.</p>
+
+		<form id="exportForm" class="controls">
+			<div class="field">
+				<label for="umbrella">Umbrella</label>
+				<input id="umbrella" name="umbrella" type="text" value="balfolk-nl" />
+			</div>
+			<div class="field">
+				<label for="start">Start date</label>
+				<input id="start" name="start" type="date" />
+			</div>
+			<div class="field">
+				<label for="end">End date</label>
+				<input id="end" name="end" type="date" />
+			</div>
+			<div class="field" style="align-self:end">
+				<div style="display:flex;gap:8px">
+					<button id="exportBtn" type="submit">Export</button>
+					<button id="downloadCsvBtn" type="button">Download as CSV</button>
+				</div>
+			</div>
+		</form>
+
+		<div id="status" class="note"></div>
+
+		<div id="results">
+			<table id="eventsTable" aria-live="polite">
+				<thead>
+					<tr><th>Name</th><th>Subtitle</th><th>Date</th></tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<script>
+	// Handle safe returnTo param: allows returning to a known same-origin page.
+	(function(){
+		console.log('in func');
+		const params = new URLSearchParams(location.search);
+		const raw = params.get('returnTo');
+		if (!raw) return;
+		try{
+			// decode the returned value in case it was encoded by the index page
+			const decoded = decodeURIComponent(raw);
+			const resolved = new URL(decoded, location.href);
+			// only allow same-origin http(s) links
+			console.log('resolved', resolved);
+			if ((resolved.protocol === 'http:' || resolved.protocol === 'https:')){
+				// Use only the path+query+hash portion to avoid leaking origin
+				const safePath = resolved.origin + resolved.pathname;
+				const btn = document.getElementById('backBtn');
+				console.log('in if with btn', btn, safePath);
+				if (btn) btn.setAttribute('href', safePath);
+			}
+		}catch(e){
+			// ignore invalid values and keep default
+			console.log('invalid param');
+		}
+	})();
+
+		const form = document.getElementById('exportForm');
+		const umbrellaInput = document.getElementById('umbrella');
+		const startInput = document.getElementById('start');
+		const endInput = document.getElementById('end');
+		const exportBtn = document.getElementById('exportBtn');
+		const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+		const status = document.getElementById('status');
+		const tbody = document.querySelector('#eventsTable tbody');
+
+		function fmtText(s){return s==null? '': String(s)}
+
+		form.addEventListener('submit', async (ev) => {
+			ev.preventDefault();
+			tbody.innerHTML = '';
+			status.textContent = '';
+
+			const umbrella = encodeURIComponent((umbrellaInput.value || 'balfolk-nl').trim());
+			const start = startInput.value; // yyyy-mm-dd
+			const end = endInput.value; // yyyy-mm-dd
+
+			if (!start || !end){
+				status.textContent = 'Please choose both start and end dates.';
+				return;
+			}
+
+			const url = `https://plugeventsexport.azurewebsites.net/api/UmbrellaEvents?Umbrella=${umbrella}&StartDate=${encodeURIComponent(start)}&EndDate=${encodeURIComponent(end)}&Top=999`;
+
+			// Use the direct API URL. When deployed as a static site the request should come
+			// from an https origin and the API server may allow it. Browsers enforce CORS; if
+			// you see CORS errors while testing locally, serve this folder over HTTP or deploy
+			// to a static host (see README.md).
+			const fetchUrl = url;
+
+			exportBtn.disabled = true;
+			status.textContent = 'Loading...';
+
+			try{
+				const res = await fetch(fetchUrl, {cache:'no-store'});
+				if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
+				const data = await res.json();
+				if (!Array.isArray(data) || data.length===0){
+					status.textContent = 'No events returned for the selected range.';
+					return;
+				}
+
+				status.textContent = `${data.length} events returned.`;
+				const frag = document.createDocumentFragment();
+				data.forEach(item => {
+					const tr = document.createElement('tr');
+
+					const nameCell = document.createElement('td');
+					const slug = item.toSlug || '';
+					const nameText = fmtText(item.toName) || '(no name)';
+					if (slug){
+						const a = document.createElement('a');
+						a.href = `https://www.plug.events/event/${encodeURIComponent(slug)}`;
+						a.target = '_blank';
+						a.rel = 'noopener noreferrer';
+						a.textContent = nameText;
+						nameCell.appendChild(a);
+					} else {
+						nameCell.textContent = nameText;
+					}
+
+					const subtitleCell = document.createElement('td');
+					subtitleCell.textContent = fmtText(item.toSubtitle);
+
+					const createdCell = document.createElement('td');
+					createdCell.textContent = fmtText(item.toEventReadableTime);
+
+					tr.appendChild(nameCell);
+					tr.appendChild(subtitleCell);
+					tr.appendChild(createdCell);
+					frag.appendChild(tr);
+				});
+
+				tbody.appendChild(frag);
+			} catch (err) {
+				console.error(err);
+				// If this is a CORS-related failure in the browser, explain next steps.
+				status.innerHTML = 'Error fetching events: ' + (err.message || err) +
+					'<br><br>If you see a CORS error in the browser when testing locally, either:' +
+					'<ul><li>Deploy this folder as a static web app (recommended), or</li><li>Serve the folder locally over HTTP (e.g. <code>python -m http.server 8000</code>) and open via <code>http://localhost:8000</code>.</li></ul>';
+			} finally {
+				exportBtn.disabled = false;
+			}
+		});
+
+		// CSV download: build same URL but request CSV format and open it to trigger download
+		downloadCsvBtn.addEventListener('click', (ev) => {
+			status.textContent = '';
+			const umbrella = encodeURIComponent((umbrellaInput.value || 'balfolk-nl').trim());
+			const start = startInput.value;
+			const end = endInput.value;
+			if (!start || !end){
+				status.textContent = 'Please choose both start and end dates.';
+				return;
+			}
+
+			const url = `https://plugeventsexport.azurewebsites.net/api/UmbrellaEvents?Umbrella=${umbrella}&StartDate=${encodeURIComponent(start)}&EndDate=${encodeURIComponent(end)}&Top=999&format=CSV`;
+			status.textContent = 'Starting CSV download...';
+			// Open in new tab/window — server should return a CSV attachment
+			window.open(url, '_blank');
+		});
+	</script>
+</body>
+</html>
+
