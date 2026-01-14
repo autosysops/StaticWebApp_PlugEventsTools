@@ -3,39 +3,16 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<link rel="stylesheet" href="../styles/site.css" />
 	<title>Calendar Export</title>
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-	<style>
-		:root{--accent:#0b6b5f;--muted:#6b6b6b;--bg:#ffffff}
-		html,body{height:100%;margin:0;font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:#f5f7f8;color:#1b1b1b}
-		.wrap{max-width:980px;margin:36px auto;padding:28px;background:var(--bg);box-shadow:0 6px 18px rgba(16,24,40,0.06);border-radius:8px}
-		.header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-		.backBtn{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:#fff;color:var(--accent);border:1px solid #d1e7e2;text-decoration:none;font-weight:600}
-		h1{margin:0 0 12px;font-size:20px}
-		p.lead{margin:0 0 18px;color:var(--muted)}
-		form.controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-		.field{display:flex;flex-direction:column;min-width:160px}
-		label{font-size:13px;color:var(--muted);margin-bottom:6px}
-		input[type="text"],input[type="date"]{padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px}
-		button#exportBtn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:6px;font-weight:600;cursor:pointer}
-		button#exportBtn:disabled{opacity:0.6;cursor:default}
-		button#downloadCsvBtn{background:#fff;color:var(--accent);border:1px solid #d1e7e2;padding:10px 14px;border-radius:6px;font-weight:600;cursor:pointer}
-		button#downloadCsvBtn:disabled{opacity:0.6;cursor:default}
-		.note{font-size:13px;color:var(--muted);margin-top:8px}
-		table{width:100%;border-collapse:collapse;margin-top:18px}
-		th,td{padding:12px 10px;text-align:left;border-bottom:1px solid #eef3f4}
-		th{font-size:13px;color:var(--muted);font-weight:600}
-		td a{color:var(--accent);text-decoration:none}
-		td a:hover{text-decoration:underline}
-		.empty{padding:18px;text-align:center;color:var(--muted)}
-		@media (max-width:640px){.field{min-width:140px;width:100%}.controls{flex-direction:column}}
-	</style>
+	<!-- styles moved to ../styles/site.css -->
 </head>
 
 <body>
 	<div class="wrap">
-		<div style="text-align:left;margin-bottom:12px">
+		<div class="top-actions">
 			<a class="backBtn" id="backBtn" href="../index.html">← Menu</a>
 		</div>
 		<h1>Export Umbrella Events</h1>
@@ -54,11 +31,11 @@
 				<label for="end">End date</label>
 				<input id="end" name="end" type="date" />
 			</div>
-			<div class="field" style="align-self:end">
-				<div style="display:flex;gap:8px">
-					<button id="exportBtn" type="submit">Export</button>
-					<button id="downloadCsvBtn" type="button">Download as CSV</button>
-				</div>
+			<div class="field actions">
+					<div class="btn-row">
+						<button id="exportBtn" type="submit" class="primary">Export</button>
+						<button id="downloadCsvBtn" type="button" class="ghost">Download as CSV</button>
+					</div>
 			</div>
 		</form>
 
@@ -205,6 +182,12 @@
 			window.open(url, '_blank');
 		});
 	</script>
+	<footer class="site-footer">
+		<div class="wrap footer">
+			<a href="https://github.com/autosysops/StaticWebApp_PlugEventsTools" target="_blank" rel="noopener noreferrer">Website</a>
+			<a href="https://github.com/autosysops/PowerShell_PlugEvents" target="_blank" rel="noopener noreferrer">PowerShell module</a>
+		</div>
+	</footer>
 </body>
 </html>
 
