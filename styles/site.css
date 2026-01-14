@@ -54,10 +54,8 @@ td a:hover{text-decoration:underline}
 
 /* Small utility classes moved from inline attributes */
 .top-actions{text-align:left;margin-bottom:12px}
-.controls .field.actions{justify-content:flex-end}
-.btn-row{display:flex;gap:8px;align-items:center}
-/* Ensure consistent vertical metrics for inputs and buttons */
-input[type="text"],input[type="date"],select,textarea,button{line-height:1.2}
+.controls .field.actions{align-self:end}
+.btn-row{display:flex;gap:8px}
 
 @media (max-width:640px){
   .field{min-width:140px;width:100%}

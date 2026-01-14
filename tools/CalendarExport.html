@@ -3,13 +3,15 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
-	<link rel="preload" href="../styles/site.css" as="style" onload="this.rel='stylesheet'">
-	<noscript><link rel="stylesheet" href="../styles/site.css"></noscript>
+	<link rel="stylesheet" href="../styles/site.css" />
 	<meta name="description" content="Export Umbrella events from Plug.Events as JSON or CSV. Simple UI for selecting umbrella and date range.">
 	<title>Calendar Export</title>
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link rel="preload" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" as="style" onload="this.rel='stylesheet'">
 	<noscript><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet"></noscript>
+	<link rel="stylesheet" href="../styles/site.css" />
+	<link rel="preload" href="../styles/site.css" as="style" onload="this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="../styles/site.css"></noscript>
 	<!-- styles moved to ../styles/site.css -->
 </head>
 
@@ -17,7 +19,7 @@
 	<main role="main" class="wrap">
 		<div class="top-actions">
 			<a class="backBtn" id="backBtn" href="../index.html">← Menu</a>
-		</main>
+		</div>
 		<h1>Export Umbrella Events</h1>
 		<p class="lead">Enter an umbrella name and date range to export events from Plug.Events.</p>
 
@@ -52,7 +54,7 @@
 				<tbody></tbody>
 			</table>
 		</div>
-	</div>
+	</main>
 
 	<script>
 	// Handle safe returnTo param: allows returning to a known same-origin page.
