@@ -15,6 +15,12 @@
     .tool{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;min-width:160px}
     .tool.secondary{background:#fff;color:var(--accent);border:1px solid #d1e7e2}
     @media (max-width:640px){.grid{flex-direction:column}.tool{width:100%}}
+    /* Footer critical styles to avoid layout shift */
+    .site-footer{background:transparent;margin-top:20px}
+    .site-footer .footer{display:flex;gap:12px;justify-content:center;align-items:center;padding:12px 16px;border-top:1px solid #eef3f4;background:var(--bg);font-size:13px;color:var(--muted);flex-wrap:wrap}
+    .site-footer .footer a{color:var(--accent);text-decoration:none;font-weight:600}
+    .gh-icon{width:16px;height:16px;vertical-align:middle;margin-right:8px;fill:currentColor}
+    .footer a span{vertical-align:middle}
   </style>
   <link rel="preload" href="styles/site.css" as="style" onload="this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="styles/site.css"></noscript>
