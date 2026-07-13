@@ -80,7 +80,6 @@
 	<script>
 	// Handle safe returnTo param: allows returning to a known same-origin page.
 	(function(){
-		console.log('in func');
 		const params = new URLSearchParams(location.search);
 		const raw = params.get('returnTo');
 		if (!raw) return;
