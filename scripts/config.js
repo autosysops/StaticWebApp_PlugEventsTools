@@ -1,2 +1,3 @@
 const API_BASE_URL = 'https://plugeventsbackend.balfolkworkshop.com';
 const UNSUBSCRIBE_URL = 'https://prod-27.swedencentral.logic.azure.com:443/workflows/94a6d7bd71594df09a7f84bed48140d4/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=ji1UZZjAL7-k5Ezi9zQpc5mUHugCgRElvajpW-n50aY';
+const SUBSCRIBE_URL   = 'https://prod-18.swedencentral.logic.azure.com:443/workflows/6b552fd87d504621886a6218b7ec4c3f/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=-Ibkx8T1CymLcRqA_JLfgPR5I-gMY1dhWRJCuapWdSY';

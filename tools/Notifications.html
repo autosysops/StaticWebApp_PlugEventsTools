@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<meta name="description" content="Subscribe to receive email notifications for upcoming Plug.Events events.">
+	<title>Event Notifications</title>
+	<link rel="icon" type="image/x-icon" href="../favicon.ico">
+	<!-- Critical CSS inlined to reduce critical request chain for LCP -->
+	<style id="critical-css">
+		:root{--accent:#0b6b5f;--bg:#ffffff;--muted:#6b6b6b}
+		html,body{height:100%;margin:0;font-family:Inter, 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;background:#f5f7f8;color:#1b1b1b}
+		.wrap{max-width:980px;margin:36px auto;padding:28px;background:var(--bg);box-shadow:0 6px 18px rgba(16,24,40,0.06);border-radius:8px}
+		.top-actions{text-align:left;margin-bottom:12px}
+		.backBtn{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:#fff;color:var(--accent);border:1px solid #d1e7e2;text-decoration:none;font-weight:600}
+		h1{margin:0 0 12px;font-size:20px}
+		p.lead{margin:0 0 18px;color:var(--muted)}
+		.controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+		.field{display:flex;flex-direction:column;min-width:160px}
+		.field.wide{min-width:280px;flex:1 1 280px}
+		.field label{font-size:13px;font-weight:600;margin-bottom:4px}
+		.field label .opt{font-weight:400;color:var(--muted)}
+		input[type="text"],input[type="email"],input[type="number"],select,button{padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;font-size:14px}
+		select{cursor:pointer}
+		.location-row{display:flex;gap:8px}
+		.location-row input{flex:1;min-width:0}
+		.find-btn{white-space:nowrap;cursor:pointer;border:1px solid #e2e8f0}
+		.location-hint{font-size:12px;margin-top:5px;min-height:16px;color:var(--muted);word-break:break-word}
+		.location-hint.found{color:var(--accent)}
+		.location-hint.notfound{color:#c0392b}
+		.btn-row{display:flex;gap:8px;align-items:flex-end;margin-top:auto}
+		.privacy{margin-top:20px;padding:14px 16px;background:#f5f7f8;border-radius:6px;font-size:13px;color:var(--muted);border:1px solid #eef3f4;line-height:1.6}
+		.privacy strong{color:#1b1b1b}
+		.note{margin-top:16px;font-size:14px;min-height:20px;color:var(--muted)}
+		.note.success{color:var(--accent);font-weight:600}
+		.note.error{color:#c0392b;font-weight:600}
+		/* Footer critical styles to avoid layout shift */
+		.site-footer{background:transparent;margin-top:20px}
+		.site-footer .footer{display:flex;gap:12px;justify-content:center;align-items:center;padding:12px 16px;border-top:1px solid #eef3f4;background:var(--bg);font-size:13px;color:var(--muted);flex-wrap:wrap}
+		.site-footer .footer a{color:var(--accent);text-decoration:none;font-weight:600}
+		.gh-icon{width:16px;height:16px;vertical-align:middle;margin-right:8px;fill:currentColor}
+		.footer a span{vertical-align:middle}
+	</style>
+	<link rel="preload" href="../styles/site.css" as="style" onload="this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="../styles/site.css"></noscript>
+	<script src="../scripts/config.js"></script>
+</head>
+
+<body>
+	<main role="main" class="wrap">
+		<div class="top-actions">
+			<a class="backBtn" href="../index.html">← Menu</a>
+		</div>
+		<h1>Event Notifications</h1>
+		<p class="lead">On this page you can subscribe to receive an email with the next upcoming events on Plug.Events. You can choose how often you want the email to be sent — it will include all events until your next email. If you want, you can enter your address or a nearby address; the email will then also state how far each event is from you. You can choose on which day of the week you want to receive it.</p>
+
+		<form id="subscribeForm" class="controls" novalidate>
+			<div class="field wide">
+				<label for="emailInput">Email address</label>
+				<input id="emailInput" name="email" type="email" required placeholder="you@example.com" autocomplete="email" />
+			</div>
+			<div class="field">
+				<label for="umbrellaInput">Umbrella</label>
+				<input id="umbrellaInput" name="umbrella" type="text" value="balfolk-nl" required />
+				<span id="umbrellaHint" class="location-hint" data-hint-class="location-hint" aria-live="polite"></span>
+			</div>
+			<div class="field wide">
+				<label for="locationInput">Location <span class="opt">(optional — type an address and press Find)</span></label>
+				<div class="location-row">
+					<input id="locationInput" name="location" type="text" placeholder="e.g. Amsterdam, Netherlands" autocomplete="off" />
+					<button type="button" id="findLocationBtn" class="find-btn">Find</button>
+				</div>
+				<span id="locationHint" class="location-hint" aria-live="polite"></span>
+			</div>
+			<div class="field">
+				<label for="intervalInput">Every (weeks)</label>
+				<input id="intervalInput" name="interval" type="number" min="1" max="52" value="1" required />
+			</div>
+			<div class="field">
+				<label for="daySelect">Send on</label>
+				<select id="daySelect" name="day">
+					<option value="1">Monday</option>
+					<option value="2">Tuesday</option>
+					<option value="3">Wednesday</option>
+					<option value="4" selected>Thursday</option>
+					<option value="5">Friday</option>
+					<option value="6">Saturday</option>
+					<option value="7">Sunday</option>
+				</select>
+			</div>
+			<div class="field">
+				<label>&nbsp;</label>
+				<div class="btn-row">
+					<button id="subscribeBtn" type="submit" class="primary" data-umbrella-gate disabled>Subscribe</button>
+				</div>
+			</div>
+		</form>
+
+		<div id="statusMsg" class="note" aria-live="polite"></div>
+
+		<div class="privacy">
+			<strong>Privacy</strong><br>
+			When you subscribe we will store your email address and, if you choose to provide it, your latitude and longitude. With every subscription confirmation and in every notification email you will receive a link to unsubscribe, which will permanently remove all your stored data. No data will be shared with third parties. All data is stored in Microsoft Azure within the European Economic Area.
+		</div>
+	</main>
+
+	<script src="../scripts/umbrella-validate.js"></script>
+	<script>
+	(function () {
+		let resolvedLat = null;
+		let resolvedLon = null;
+
+		const locationInput = document.getElementById('locationInput');
+		const findBtn       = document.getElementById('findLocationBtn');
+		const locationHint  = document.getElementById('locationHint');
+		const umbrellaInput = document.getElementById('umbrellaInput');
+		const form          = document.getElementById('subscribeForm');
+		const statusMsg     = document.getElementById('statusMsg');
+		const subscribeBtn  = document.getElementById('subscribeBtn');
+
+		function setStatus(text, type) {
+			statusMsg.textContent = text;
+			statusMsg.className = 'note' + (type ? ' ' + type : '');
+		}
+
+		function setLocationHint(text, type) {
+			locationHint.textContent = text;
+			locationHint.className = 'location-hint' + (type ? ' ' + type : '');
+		}
+
+		async function searchLocation() {
+			const query = locationInput.value.trim();
+			if (!query) {
+				resolvedLat = null;
+				resolvedLon = null;
+				setLocationHint('');
+				return;
+			}
+			setLocationHint('Searching\u2026');
+			try {
+				const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(query);
+				const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+				if (!res.ok) throw new Error('HTTP ' + res.status);
+				const data = await res.json();
+				if (data && data.length > 0) {
+					resolvedLat = parseFloat(data[0].lat);
+					resolvedLon = parseFloat(data[0].lon);
+					setLocationHint('Found: ' + data[0].display_name, 'found');
+				} else {
+					resolvedLat = null;
+					resolvedLon = null;
+					setLocationHint('Location not found. Please try a different search.', 'notfound');
+				}
+			} catch (e) {
+				resolvedLat = null;
+				resolvedLon = null;
+				setLocationHint('Could not reach the location service. Please try again.', 'notfound');
+			}
+		}
+
+		findBtn.addEventListener('click', searchLocation);
+
+		locationInput.addEventListener('keydown', function (e) {
+			if (e.key === 'Enter') {
+				e.preventDefault();
+				searchLocation();
+			}
+		});
+
+		locationInput.addEventListener('input', function () {
+			resolvedLat = null;
+			resolvedLon = null;
+			setLocationHint('');
+		});
+
+		form.addEventListener('submit', async function (ev) {
+			ev.preventDefault();
+
+			const email    = document.getElementById('emailInput').value.trim();
+			const umbrella = umbrellaInput.value.trim();
+			const interval = parseInt(document.getElementById('intervalInput').value, 10);
+			const day      = parseInt(document.getElementById('daySelect').value, 10);
+
+			if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+				setStatus('Please enter a valid email address.', 'error');
+				return;
+			}
+			if (!umbrellaIsValid) {
+				setStatus('Please enter a valid umbrella name.', 'error');
+				return;
+			}
+			if (!interval || interval < 1) {
+				setStatus('Please enter a valid interval of at least 1 week.', 'error');
+				return;
+			}
+
+			if (locationInput.value.trim() && resolvedLat === null) {
+				await searchLocation();
+				if (resolvedLat === null) {
+					setStatus('Could not resolve the location. Please use the Find button to verify your address, or clear the location field.', 'error');
+					return;
+				}
+			}
+
+			const body = {
+				type: 'email',
+				id: email,
+				umbrella: umbrella,
+				interval: interval,
+				day: day
+			};
+			if (resolvedLat !== null && resolvedLon !== null) {
+				body.lat = resolvedLat;
+				body.lon = resolvedLon;
+			}
+
+			subscribeBtn.disabled = true;
+			setStatus('Please wait while we subscribe you\u2026');
+
+			try {
+				const res = await fetch(SUBSCRIBE_URL, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(body)
+				});
+				if (res.ok) {
+					setStatus('Thank you for subscribing!', 'success');
+					form.reset();
+					resolvedLat = null;
+					resolvedLon = null;
+					setLocationHint('');
+					await umbrellaValidate();
+				} else {
+					setStatus('Something went wrong (status ' + res.status + '). Please try again later.', 'error');
+					subscribeBtn.disabled = !umbrellaIsValid;
+				}
+			} catch (err) {
+				setStatus('Could not reach the server. Please check your connection and try again.', 'error');
+				subscribeBtn.disabled = !umbrellaIsValid;
+			}
+		});
+	})();
+	</script>
+
+	<script src="../scripts/footer.js"></script>
+</body>
+</html>
