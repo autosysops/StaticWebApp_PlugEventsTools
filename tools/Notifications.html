@@ -31,6 +31,11 @@
 		.location-hint.found{color:var(--accent)}
 		.location-hint.notfound{color:#c0392b}
 		.btn-row{display:flex;gap:8px;align-items:flex-end;margin-top:auto}
+		@media (max-width:600px){
+			.controls{flex-direction:column}
+			.field,.field.wide{min-width:0;width:100%}
+			.btn-row{margin-top:8px}
+		}
 		.privacy{margin-top:20px;padding:14px 16px;background:#f5f7f8;border-radius:6px;font-size:13px;color:var(--muted);border:1px solid #eef3f4;line-height:1.6}
 		.privacy strong{color:#1b1b1b}
 		.note{margin-top:16px;font-size:14px;min-height:20px;color:var(--muted)}
