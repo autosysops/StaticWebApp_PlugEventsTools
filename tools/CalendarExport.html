@@ -86,30 +86,8 @@
 	</main>
 
 	<script src="../scripts/umbrella-validate.js"></script>
+	<script src="../scripts/back-btn.js"></script>
 	<script>
-	// Handle safe returnTo param: allows returning to a known same-origin page.
-	(function(){
-		const params = new URLSearchParams(location.search);
-		const raw = params.get('returnTo');
-		if (!raw) return;
-		try{
-			// decode the returned value in case it was encoded by the index page
-			const decoded = decodeURIComponent(raw);
-			const resolved = new URL(decoded);
-			// only allow same-origin http(s) links
-			//console.log('resolved', resolved);
-			if ((resolved.protocol === 'http:' || resolved.protocol === 'https:')){
-				// Use only the path+query+hash portion to avoid leaking origin
-				const safePath = resolved.origin + resolved.pathname;
-				const btn = document.getElementById('backBtn');
-				//console.log('in if with btn', btn, safePath);
-				if (btn) btn.setAttribute('href', safePath);
-			}
-		}catch(e){
-			// ignore invalid values and keep default
-			//console.log('invalid param');
-		}
-	})();
 
 		const form = document.getElementById('exportForm');
 		const umbrellaInput = document.getElementById('umbrella');
