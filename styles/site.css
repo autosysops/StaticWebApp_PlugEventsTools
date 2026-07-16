@@ -24,7 +24,7 @@ button.ghost{background:#fff;color:var(--accent);border:1px solid #d1e7e2;font-w
 .tool.secondary{background:#fff;color:var(--accent);border:1px solid #d1e7e2}
 
 /* Forms responsiveness */
-.controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:flex-start}
 .controls .field{display:flex;flex-direction:column;min-width:160px}
 
 @media (max-width:640px){
@@ -32,6 +32,8 @@ button.ghost{background:#fff;color:var(--accent);border:1px solid #d1e7e2;font-w
   .tool{width:100%}
   .controls{flex-direction:column}
   .controls .field{width:100%;min-width:0}
+  /* In column mode flex-basis becomes a height; reset wide fields to auto height */
+  .controls .field.wide{flex:none;width:100%}
 }
 
 /* Typography and small helpers */
