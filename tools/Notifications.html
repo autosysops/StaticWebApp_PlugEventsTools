@@ -15,6 +15,8 @@
 		.backBtn{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:#fff;color:var(--accent);border:1px solid #d1e7e2;text-decoration:none;font-weight:600}
 		h1{margin:0 0 12px;font-size:20px}
 		p.lead{margin:0 0 18px;color:var(--muted)}
+		ul.lead{margin:0 0 18px;padding-left:20px;color:var(--muted)}
+		ul.lead li{margin-bottom:6px}
 		.controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
 		.field{display:flex;flex-direction:column;min-width:160px}
 		.field.wide{min-width:280px;flex:1 1 280px}
@@ -52,7 +54,12 @@
 			<a class="backBtn" href="../index.html">← Menu</a>
 		</div>
 		<h1>Event Notifications</h1>
-		<p class="lead">On this page you can subscribe to receive an email with the next upcoming events on Plug.Events. You can choose how often you want the email to be sent — it will include all events until your next email. If you want, you can enter your address or a nearby address; the email will then also state how far each event is from you. You can choose on which day of the week you want to receive it.</p>
+		<p class="lead">On this page you can subscribe to receive an email with upcoming events on Plug.Events.</p>
+		<ul class="lead">
+			<li><strong>Umbrella</strong> — filters which events you see. Only events linked to the umbrella you enter will appear in your emails.</li>
+			<li><strong>Every (weeks)</strong> and <strong>Send on</strong> work together to set your schedule. If you choose 2 weeks and Wednesday, you will receive an email every 2 weeks on Wednesday, and each email will list all events taking place in those next 2 weeks. A shorter interval means more frequent emails covering fewer events; a longer interval means less frequent emails covering more events.</li>
+			<li><strong>Location</strong> (optional) — adds a driving distance to each event in the email so you can quickly see how far away it is. It does not filter events; you will still see all events for your umbrella regardless of distance. You do not need to enter your exact address — a nearby town or landmark works just as well.</li>
+		</ul>
 
 		<form id="subscribeForm" class="controls" novalidate>
 			<div class="field wide">
