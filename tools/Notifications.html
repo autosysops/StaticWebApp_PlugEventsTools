@@ -61,7 +61,8 @@
 		<p class="lead">On this page you can subscribe to receive an email with upcoming events on Plug.Events.</p>
 		<ul class="lead">
 			<li><strong>Umbrella</strong> — filters which events you see. Only events linked to the umbrella you enter will appear in your emails.</li>
-			<li><strong>Every (weeks)</strong> and <strong>Send on</strong> work together to set your schedule. If you choose 2 weeks and Wednesday, you will receive an email every 2 weeks on Wednesday, and each email will list all events taking place in those next 2 weeks. A shorter interval means more frequent emails covering fewer events; a longer interval means less frequent emails covering more events.</li>
+			<li><strong>Every (weeks)</strong> and <strong>Send on</strong> — set the delivery schedule. For example, choose 2 weeks and Wednesday to receive an email once every 2 weeks, always on a Wednesday.</li>
+			<li><strong>Look ahead (weeks)</strong> — controls how many weeks of upcoming events are included in each email. Set to 1 to see only next week's events; set to 4 to get a full month at a glance. This is independent of how often the email is sent.</li>
 			<li><strong>Location</strong> (optional) — adds a driving distance to each event in the email so you can quickly see how far away it is. It does not filter events; you will still see all events for your umbrella regardless of distance. You do not need to enter your exact address — a nearby town or landmark works just as well.</li>
 		</ul>
 
@@ -88,6 +89,10 @@
 				<input id="intervalInput" name="interval" type="number" min="1" max="52" value="1" required />
 			</div>
 			<div class="field">
+				<label for="periodInput">Look ahead (weeks)</label>
+				<input id="periodInput" name="period" type="number" min="1" max="52" value="2" required />
+			</div>
+			<div class="field">
 				<label for="daySelect">Send on</label>
 				<select id="daySelect" name="day">
 					<option value="1">Monday</option>
@@ -96,7 +101,7 @@
 					<option value="4" selected>Thursday</option>
 					<option value="5">Friday</option>
 					<option value="6">Saturday</option>
-					<option value="7">Sunday</option>
+					<option value="0">Sunday</option>
 				</select>
 			</div>
 			<div class="field">
@@ -191,6 +196,7 @@
 			const email    = document.getElementById('emailInput').value.trim();
 			const umbrella = umbrellaInput.value.trim();
 			const interval = parseInt(document.getElementById('intervalInput').value, 10);
+			const period   = parseInt(document.getElementById('periodInput').value, 10);
 			const day      = parseInt(document.getElementById('daySelect').value, 10);
 
 			if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -202,7 +208,11 @@
 				return;
 			}
 			if (!interval || interval < 1) {
-				setStatus('Please enter a valid interval of at least 1 week.', 'error');
+				setStatus('Please enter a valid send frequency of at least 1 week.', 'error');
+				return;
+			}
+			if (!period || period < 1) {
+				setStatus('Please enter a valid look-ahead of at least 1 week.', 'error');
 				return;
 			}
 
@@ -219,6 +229,7 @@
 				id: email,
 				umbrella: umbrella,
 				interval: interval,
+				period: period,
 				day: day
 			};
 			if (resolvedLat !== null && resolvedLon !== null) {
